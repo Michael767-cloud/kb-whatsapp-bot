@@ -37,9 +37,12 @@ export function createApp({ config: providedConfig, db: providedDb, sendMessage 
     const mode = req.query['hub.mode'];
     const token = req.query['hub.verify_token'];
     const challenge = req.query['hub.challenge'];
+    const safeChallenge = typeof challenge === 'string' && /^[A-Za-z0-9_-]{1,200}$/.test(challenge)
+      ? challenge
+      : null;
 
-    if (mode === 'subscribe' && token === config.verifyToken) {
-      return res.status(200).send(challenge);
+    if (mode === 'subscribe' && token === config.verifyToken && safeChallenge) {
+      return res.type('text/plain').status(200).send(safeChallenge);
     }
 
     return res.sendStatus(403);
