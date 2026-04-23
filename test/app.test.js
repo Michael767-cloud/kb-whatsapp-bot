@@ -109,4 +109,5 @@ test('reply service returns menu/help/hours and echo fallback', async () => {
   assert.equal(await buildReply({ text: 'help', isFirstMessage: false }), 'Help: send menu to see options or type your message and I will echo it.');
   assert.equal(await buildReply({ text: 'hours', isFirstMessage: false }), 'Support hours: Monday to Friday, 9:00 AM to 5:00 PM.');
   assert.equal(await buildReply({ text: 'Anything else', isFirstMessage: false }), 'Echo: Anything else');
+  assert.equal(await buildReply({ text: '   ', isFirstMessage: false }), 'Echo: (empty message)');
 });

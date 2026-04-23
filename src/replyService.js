@@ -26,5 +26,9 @@ export async function buildReply({ text, isFirstMessage }) {
     return aiReply;
   }
 
-  return `Echo: ${text || ''}`.trim();
+  if (!text || !text.trim()) {
+    return 'Echo: (empty message)';
+  }
+
+  return `Echo: ${text}`;
 }
