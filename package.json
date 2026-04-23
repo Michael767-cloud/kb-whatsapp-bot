@@ -1,0 +1,16 @@
+{
+  "name": "kb-whatsapp-bot",
+  "version": "1.0.0",
+  "description": "KB'S AI Assistance WhatsApp Cloud API bot",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "sqlite3": "^5.1.7"
+  }
+}
