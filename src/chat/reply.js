@@ -23,7 +23,7 @@ function resolveReply(rawMessage) {
     return 'Support hours are Monday to Friday, 9:00 AM to 6:00 PM.';
   }
 
-  return `Thanks for your message: "${message}". I\'m here to help—could you share a bit more detail?`;
+  return "Thanks for your message. I'm here to help—could you share a bit more detail?";
 }
 
 module.exports = { resolveReply };

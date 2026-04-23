@@ -1,4 +1,4 @@
-async function generateAIReply() {
+async function generateAIReply(_message) {
   return null;
 }
 

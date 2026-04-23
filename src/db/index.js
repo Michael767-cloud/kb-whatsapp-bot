@@ -1,8 +1,13 @@
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 
-const dbPath = path.join(process.cwd(), 'data.sqlite');
-const db = new sqlite3.Database(dbPath);
+const dbPath = process.env.DB_PATH || path.join(__dirname, '..', '..', 'data.sqlite');
+const db = new sqlite3.Database(dbPath, (error) => {
+  if (error) {
+    console.error('Failed to open SQLite database:', error);
+    throw error;
+  }
+});
 
 db.serialize(() => {
   db.run(`
@@ -23,7 +28,7 @@ function logConversation({ sessionId, userMessage, botReply }) {
       [new Date().toISOString(), sessionId, userMessage, botReply],
       (error) => {
         if (error) {
-          reject(error);
+          reject(new Error(`Failed to log conversation: ${error.message}`));
           return;
         }
         resolve();

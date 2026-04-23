@@ -20,6 +20,7 @@ A lightweight web-based chatbot built with Node.js, Express, and SQLite.
    ```bash
    cp .env.example .env
    ```
+   Then review `.env` and update values as needed for your environment.
 3. Start server:
    ```bash
    npm start
@@ -34,6 +35,7 @@ A lightweight web-based chatbot built with Node.js, Express, and SQLite.
 See `.env.example`:
 
 - `PORT` (default `3000`)
+- `DB_PATH` (optional path to SQLite file; defaults to `./data.sqlite`)
 - `GEMINI_API_KEY` (placeholder for future provider integration)
 
 ## Test

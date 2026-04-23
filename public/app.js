@@ -2,7 +2,7 @@ const chatWindow = document.getElementById('chat');
 const form = document.getElementById('chat-form');
 const messageInput = document.getElementById('message');
 
-const greeting = "Hello, I\'m KB\'S AI Assistance — thanks for reaching out. How can I help today?";
+const INITIAL_BOT_MESSAGE = "Hello, I'm KB'S AI Assistance — thanks for reaching out. How can I help today?";
 const sessionStorageKey = 'kb-ai-greeted';
 const sessionIdStorageKey = 'kb-ai-session-id';
 
@@ -11,9 +11,23 @@ function getSessionId() {
   if (existing) {
     return existing;
   }
-  const created = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-  sessionStorage.setItem(sessionIdStorageKey, created);
+  const created = createSessionId();
+  if (created) {
+    sessionStorage.setItem(sessionIdStorageKey, created);
+  }
   return created;
+}
+
+function createSessionId() {
+  if (window.crypto?.randomUUID) {
+    return window.crypto.randomUUID();
+  }
+  if (!window.crypto?.getRandomValues) {
+    return null;
+  }
+  const bytes = new Uint8Array(16);
+  window.crypto.getRandomValues(bytes);
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
 }
 
 function appendMessage(role, text) {
@@ -25,7 +39,7 @@ function appendMessage(role, text) {
 }
 
 if (!sessionStorage.getItem(sessionStorageKey)) {
-  appendMessage('bot', greeting);
+  appendMessage('bot', INITIAL_BOT_MESSAGE);
   sessionStorage.setItem(sessionStorageKey, 'true');
 }
 
@@ -41,12 +55,17 @@ form.addEventListener('submit', async (event) => {
   messageInput.value = '';
 
   try {
+    const sessionId = getSessionId();
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+    if (sessionId) {
+      headers['x-session-id'] = sessionId;
+    }
+
     const response = await fetch('/api/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-session-id': getSessionId()
-      },
+      headers,
       body: JSON.stringify({ message })
     });
 

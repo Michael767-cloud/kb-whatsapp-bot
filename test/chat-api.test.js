@@ -22,9 +22,22 @@ test('POST /api/chat responds to menu command', async () => {
 });
 
 test('POST /api/chat validates message input', async () => {
+  const invalidMessages = [123, null, false, {}, []];
+
+  for (const invalidMessage of invalidMessages) {
+    const response = await request(app)
+      .post('/api/chat')
+      .send({ message: invalidMessage })
+      .expect(400);
+
+    assert.equal(response.body.reply, 'Invalid message. Please send text.');
+  }
+});
+
+test('POST /api/chat validates missing message field', async () => {
   const response = await request(app)
     .post('/api/chat')
-    .send({ message: 123 })
+    .send({})
     .expect(400);
 
   assert.equal(response.body.reply, 'Invalid message. Please send text.');
